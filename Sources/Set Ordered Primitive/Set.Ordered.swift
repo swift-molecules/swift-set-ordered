@@ -117,11 +117,19 @@ extension __SetOrdered where S: ~Copyable {
 
     /// Creates an empty CoW (value-semantic) ordered set on the `Shared` column.
     @inlinable
-    public init<E: Hash.Key & SendableMetatype>(minimumCapacity: Index_Primitives.Index<E>.Count = .zero)
-    where S == Ownership.Shared<E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>> {
+    public init<E: Hash.Key & SendableMetatype>(
+        minimumCapacity: Index_Primitives.Index<E>.Count = .zero
+    )
+    where
+        S == Ownership.Shared<
+            E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>
+        >
+    {
         self.init(
             store: Ownership.Shared(
-                Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>(minimumCapacity: minimumCapacity)
+                Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>(
+                    minimumCapacity: minimumCapacity
+                )
             )
         )
     }
@@ -129,11 +137,19 @@ extension __SetOrdered where S: ~Copyable {
     /// Creates an empty statically-unique ordered set of move-only members on the
     /// `Shared` column (the boxed flavor of the move-only regime).
     @inlinable
-    public init<E: Hash.Key & SendableMetatype & ~Copyable>(minimumCapacity: Index_Primitives.Index<E>.Count = .zero)
-    where S == Ownership.Shared<E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>> {
+    public init<E: Hash.Key & SendableMetatype & ~Copyable>(
+        minimumCapacity: Index_Primitives.Index<E>.Count = .zero
+    )
+    where
+        S == Ownership.Shared<
+            E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>
+        >
+    {
         self.init(
             store: Ownership.Shared(
-                Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>(minimumCapacity: minimumCapacity)
+                Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>(
+                    minimumCapacity: minimumCapacity
+                )
             )
         )
     }

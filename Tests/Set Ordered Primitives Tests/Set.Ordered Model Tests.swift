@@ -37,7 +37,10 @@ extension Model.Element.Tracked: @retroactive Hash.`Protocol` {
     }
 
     /// Returns whether two tracked elements share the same id.
-    public static func == (lhs: borrowing Model.Element.Tracked, rhs: borrowing Model.Element.Tracked) -> Bool {
+    public static func == (
+        lhs: borrowing Model.Element.Tracked,
+        rhs: borrowing Model.Element.Tracked
+    ) -> Bool {
         lhs.id == rhs.id
     }
 }
@@ -195,7 +198,9 @@ extension DirectStream {
         verdict.record("idx id=\(pick.id) @\(index)")
         let position = set.index(of: probe(pick))
         if position != Index<Model.Element.Tracked>(Ordinal(UInt(index))) {
-            verdict.diverged(["index(of: id \(pick.id)): \(String(describing: position)), model \(index)"])
+            verdict.diverged([
+                "index(of: id \(pick.id)): \(String(describing: position)), model \(index)"
+            ])
         }
     }
 
@@ -204,7 +209,9 @@ extension DirectStream {
         verdict.record("idx-miss id=\(minted.id)")
         let position = set.index(of: probe(minted))
         if position != nil {
-            verdict.diverged(["index(of:) resolved a never-inserted id \(minted.id): \(String(describing: position))"])
+            verdict.diverged([
+                "index(of:) resolved a never-inserted id \(minted.id): \(String(describing: position))"
+            ])
         }
     }
 
@@ -241,7 +248,9 @@ extension DirectStream {
         for (offset, member) in model.members.enumerated() {
             let position = set.index(of: probe(member))
             if position != Index<Model.Element.Tracked>(Ordinal(UInt(offset))) {
-                findings.append("index(of: id \(member.id)): \(String(describing: position)), model \(offset)")
+                findings.append(
+                    "index(of: id \(member.id)): \(String(describing: position)), model \(offset)"
+                )
             }
         }
         for retired in model.graveyard where !model.ids.contains(retired.id) {
@@ -380,7 +389,9 @@ extension FleetStream {
         verdict.record("idx[\(target)] id=\(pick.id) @\(index)")
         let position = siblings[target].index(of: probe(pick))
         if position != Index<Member>(Ordinal(UInt(index))) {
-            verdict.diverged(["index(of: id \(pick.id)) on sibling \(target): \(String(describing: position)), model \(index)"])
+            verdict.diverged([
+                "index(of: id \(pick.id)) on sibling \(target): \(String(describing: position)), model \(index)"
+            ])
         }
     }
 
@@ -413,7 +424,9 @@ extension FleetStream {
         var findings: [String] = []
         for (index, model) in models.enumerated() {
             if siblings[index].count != Index<Member>.Count(UInt(model.members.count)) {
-                findings.append("sibling \(index) count \(siblings[index].count), model \(model.members.count)")
+                findings.append(
+                    "sibling \(index) count \(siblings[index].count), model \(model.members.count)"
+                )
             }
             var seen: [Int] = []
             siblings[index].forEach { (member: borrowing Member) in seen.append(member.id) }
@@ -424,7 +437,9 @@ extension FleetStream {
             for (offset, member) in model.members.enumerated() {
                 let position = siblings[index].index(of: probe(member))
                 if position != Index<Member>(Ordinal(UInt(offset))) {
-                    findings.append("sibling \(index) index(of: id \(member.id)): \(String(describing: position)), model \(offset)")
+                    findings.append(
+                        "sibling \(index) index(of: id \(member.id)): \(String(describing: position)), model \(offset)"
+                    )
                 }
             }
         }
@@ -497,7 +512,9 @@ extension `Set.Ordered Model`.Integration {
     }
 
     @Test(arguments: Model.seeds(default: [0x02DE_F1E1, 0x02DE_F1E2, 0x02DE_F1E3]))
-    func `shared sibling fleet: order and positions hold per fork; refcounts end exact`(seed: UInt64) {
+    func `shared sibling fleet: order and positions hold per fork; refcounts end exact`(
+        seed: UInt64
+    ) {
         let verdict = runFleetStream(seed: seed)
         #expect(verdict.isClean, Comment(rawValue: verdict.report))
     }
@@ -507,7 +524,9 @@ extension `Set.Ordered Model`.Unit {
     @Test
     func `index(of:) tracks the backward-shift: positions compact after removal`() {
         let census = Model.Census()
-        var set = Set<Model.Element.Tracked>.Ordered(minimumCapacity: Index<Model.Element.Tracked>.Count(8))
+        var set = Set<Model.Element.Tracked>.Ordered(
+            minimumCapacity: Index<Model.Element.Tracked>.Count(8)
+        )
         (0..<6).forEach { id in
             set.insert(Model.Element.Tracked(id: id, group: id / 2, census: census))
         }
@@ -517,7 +536,9 @@ extension `Set.Ordered Model`.Unit {
             (0, 0, 0), (1, 0, 1), (3, 1, 2), (4, 2, 3), (5, 2, 4),
         ]
         for entry in expectations {
-            let position = set.index(of: Model.Element.Tracked(id: entry.id, group: entry.group, census: census))
+            let position = set.index(
+                of: Model.Element.Tracked(id: entry.id, group: entry.group, census: census)
+            )
             #expect(position == Index<Model.Element.Tracked>(Ordinal(entry.position)))
         }
         let gone = set.index(of: Model.Element.Tracked(id: 2, group: 1, census: census))
@@ -529,7 +550,9 @@ extension `Set.Ordered Model`.`Edge Case` {
     @Test
     func `a sibling's removal does not move the other sibling's positions`() {
         let census = Model.Census()
-        var first = __Set<Ownership.Shared<Member, OrderedColumn<Member>>>.Ordered(minimumCapacity: Index<Member>.Count(4))
+        var first = __Set<Ownership.Shared<Member, OrderedColumn<Member>>>.Ordered(
+            minimumCapacity: Index<Member>.Count(4)
+        )
         first.insert(Member(id: 1, group: 0, census: census))
         first.insert(Member(id: 2, group: 0, census: census))
         first.insert(Member(id: 3, group: 0, census: census))

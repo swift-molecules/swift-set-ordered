@@ -39,7 +39,9 @@ struct `Set.Ordered Column Law Tests` {
     @Test
     func `the shared ordered-hashed column obeys the seam ledger laws`() {
         let violations = Seam.Ledger.violations(
-            makeEmpty: { Ownership.Shared(OrderedColumn<Int>(minimumCapacity: Index<Int>.Count(4))) },
+            makeEmpty: {
+                Ownership.Shared(OrderedColumn<Int>(minimumCapacity: Index<Int>.Count(4)))
+            },
             element: { $0 }
         )
         #expect(violations.isEmpty, "\(violations)")
@@ -387,7 +389,9 @@ struct `Set.Ordered Teardown Tests` {
     func `the boxed move-only lane tears down via the box drain`() {
         OrderedProbe2.reset()
         do {
-            var s = __Set<Ownership.Shared<OrderedItem2, OrderedColumn<OrderedItem2>>>.Ordered(minimumCapacity: 4)
+            var s = __Set<Ownership.Shared<OrderedItem2, OrderedColumn<OrderedItem2>>>.Ordered(
+                minimumCapacity: 4
+            )
             s.insert(OrderedItem2(7))
             s.insert(OrderedItem2(8))
             let n = s.count

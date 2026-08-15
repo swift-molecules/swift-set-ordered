@@ -55,7 +55,8 @@ extension __SetOrdered where S: ~Copyable, S: Store.`Protocol` & Buffer.`Protoco
     }
 }
 
-extension __SetOrdered where S: ~Copyable, S.Element: Copyable, S: Store.`Protocol` & Buffer.`Protocol` {
+extension __SetOrdered
+where S: ~Copyable, S.Element: Copyable, S: Store.`Protocol` & Buffer.`Protocol` {
     /// The oldest-inserted member, or `nil` if the set is empty.
     ///
     /// - Complexity: O(1)

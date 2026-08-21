@@ -1,18 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-// The COLUMN-PINNED membership + position-lookup surface; the `Shared` forms cross
-// the box via the gate-first scoped accessors ([MEM-OWN-017]: inserted members
-// thread as consuming closure PARAMETERS). The seam/engine stays inside
-// `Hash.Indexed` — this discipline composes its public ops, never its planes.
 public import Buffer_Linear_Primitive
 public import Buffer_Primitive
 public import Hash_Indexed_Primitive
@@ -26,16 +11,8 @@ public import Set_Ordered_Primitive
 public import Storage_Contiguous_Primitives
 public import Storage_Primitive
 
-// ============================================================================
-// MARK: - Insert (duplicate hand-back — move-only honesty; insertion appends)
-// ============================================================================
-
 extension __SetOrdered where S: ~Copyable {
-    /// Inserts a new member at the END of the insertion order; returns `nil` on
-    /// success, or hands the element BACK if an equal member is already present —
-    /// the present member's position is unchanged (direct column).
-    ///
-    /// - Complexity: O(1) amortized
+
     @inlinable
     @discardableResult
     public mutating func insert<E: Hash.Key & ~Copyable>(_ element: consuming E) -> E?
@@ -43,10 +20,6 @@ extension __SetOrdered where S: ~Copyable {
         store.insert(element)
     }
 
-    /// Inserts a new member at the END of the insertion order (`Shared` column;
-    /// uniqueness restored first).
-    ///
-    /// - Complexity: O(1) amortized (O(`capacity`) when a copy must be made first)
     @inlinable
     @discardableResult
     public mutating func insert<E: Hash.Key & ~Copyable>(_ element: consuming E) -> E?
@@ -61,24 +34,14 @@ extension __SetOrdered where S: ~Copyable {
     }
 }
 
-// ============================================================================
-// MARK: - Membership
-// ============================================================================
-
 extension __SetOrdered where S: ~Copyable {
-    /// Whether an equal member is present (direct column).
-    ///
-    /// - Complexity: O(1) average
+
     @inlinable
     public func contains<E: Hash.Key & ~Copyable>(_ element: borrowing E) -> Bool
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
         store.contains(element)
     }
 
-    /// Whether an equal member is present (`Shared` column; no gate — reads never
-    /// detach).
-    ///
-    /// - Complexity: O(1) average
     @inlinable
     public func contains<E: Hash.Key & ~Copyable>(_ element: borrowing E) -> Bool
     where
@@ -90,29 +53,15 @@ extension __SetOrdered where S: ~Copyable {
     }
 }
 
-// ============================================================================
-// MARK: - Position lookup (the order-facing sibling of `contains`)
-// ============================================================================
-
 extension __SetOrdered where S: ~Copyable {
-    /// The insertion-order position of the equal member, or `nil` if absent
-    /// (direct column).
-    ///
-    /// - Complexity: O(1) average
+
     @inlinable
     public func index<E: Hash.Key & ~Copyable>(of element: borrowing E) -> Index<E>?
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
-        // swift-linter:disable:next raw value access
-        // REASON: this IS `Set.Ordered`'s own typed-conversion boundary — the
-        // order-facing `index(of:)` surface's entire purpose is to expose the
-        // column's raw `.position(of:)` as `Index<E>`.
+
         store.position(of: element)
     }
 
-    /// The insertion-order position of the equal member, or `nil` if absent
-    /// (`Shared` column; no gate — reads never detach).
-    ///
-    /// - Complexity: O(1) average
     @inlinable
     public func index<E: Hash.Key & ~Copyable>(of element: borrowing E) -> Index<E>?
     where
@@ -120,32 +69,19 @@ extension __SetOrdered where S: ~Copyable {
             E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>
         >
     {
-        // swift-linter:disable:next raw value access
-        // REASON: this IS `Set.Ordered`'s own typed-conversion boundary — the
-        // order-facing `index(of:)` surface's entire purpose is to expose the
-        // column's raw `.position(of:)` as `Index<E>`.
+
         store.withColumn { $0.position(of: element) }
     }
 }
 
-// ============================================================================
-// MARK: - Remove (insertion order preserved)
-// ============================================================================
-
 extension __SetOrdered where S: ~Copyable {
-    /// Removes the equal member; returns it, or `nil` if absent.
-    ///
-    /// Every later member shifts down one position — insertion order is preserved
-    /// (direct column).
-    ///
-    /// - Complexity: O(n) from the removal point (order preservation)
+
     @inlinable
     public mutating func remove<E: Hash.Key & ~Copyable>(_ element: borrowing E) -> E?
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
         store.remove(element)
     }
 
-    /// Removes the equal member (`Shared` column; uniqueness restored first).
     @inlinable
     public mutating func remove<E: Hash.Key & ~Copyable>(_ element: borrowing E) -> E?
     where
@@ -156,14 +92,12 @@ extension __SetOrdered where S: ~Copyable {
         store.withUnique { $0.remove(element) }
     }
 
-    /// Removes all members (direct column).
     @inlinable
     public mutating func removeAll<E: Hash.Key & ~Copyable>(keepingCapacity: Bool = true)
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
         store.removeAll(keepingCapacity: keepingCapacity)
     }
 
-    /// Removes all members (`Shared` column; detaches first — siblings keep theirs).
     @inlinable
     public mutating func removeAll<E: Hash.Key & SendableMetatype>(keepingCapacity: Bool = true)
     where
@@ -180,41 +114,27 @@ extension __SetOrdered where S: ~Copyable {
     }
 }
 
-// ============================================================================
-// MARK: - Iteration (insertion order) + direct clone
-// ============================================================================
-
-// swift-format-ignore
-// AmbiguousTrailingClosureOverload false-positive: the two `forEach` overloads
-// below are distinguished by mutually exclusive `where S == ...` constraints, so
-// exactly one applies for any concrete `S` — the same column-pinned pattern as
-// `insert`/`contains`/`remove`/`removeAll` above (unflagged, since those don't
-// take a closure). Split into its own extension so the ignore doesn't also
-// blanket-cover `clone()` below.
 extension __SetOrdered where S: ~Copyable {
-    /// Calls the closure for each member, in insertion order (direct column).
-    ///
-    /// - Complexity: O(n)
+
     @inlinable
     public func forEach<E: Hash.Key & ~Copyable>(_ body: (borrowing E) -> Void)
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
         store.forEach(body)
     }
 
-    /// Calls the closure for each member (`Shared` column; no gate).
-    ///
-    /// - Complexity: O(n)
     @inlinable
     public func forEach<E: Hash.Key & ~Copyable>(_ body: (borrowing E) -> Void)
-    where S == Ownership.Shared<E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>> {
+    where
+        S == Ownership.Shared<
+            E, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear>
+        >
+    {
         store.withColumn { $0.forEach(body) }
     }
 }
 
 extension __SetOrdered where S: ~Copyable {
-    /// Returns an independent copy (direct column).
-    ///
-    /// - Complexity: O(`capacity`)
+
     @inlinable
     public func clone<E: Hash.Key>() -> Self
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {

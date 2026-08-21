@@ -12,25 +12,17 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        // MARK: - Type
+
         .library(
             name: "Set Ordered Primitive",
             targets: ["Set Ordered Primitive"]
         ),
 
-        // MARK: - Umbrella
         .library(
             name: "Set Ordered Primitives",
             targets: ["Set Ordered Primitives"]
         ),
 
-        // NB: the Fixed variant's products ("Set Ordered Fixed Primitive(s)") are
-        // WITHDRAWN at the W5 reshape: `Hash.Indexed`'s membership/probing engine is
-        // pinned to the heap dense column ([MEM-COPY-018] pin block) and its planes are
-        // package-scoped, so a bounded composition cannot be built from outside
-        // swift-hash-table-primitives today. The variant returns when the engine grows
-        // bounded pins. The Test Support shell is withdrawn too (no fixtures; no
-        // consumers).
     ],
     dependencies: [
         .package(
@@ -81,14 +73,10 @@ let package = Package(
             url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
             branch: "main"
         ),
-        // NOTE: swift-set-algebra-primitives is intentionally NOT a dependency.
-        // The ordered-set discipline and the set algebra are orthogonal concerns;
-        // consumers compose them by importing both packages.
+
     ],
     targets: [
 
-        // MARK: - Type (the hoisted `__SetOrdered<S>` template + the `Set<S>.Ordered`
-        // alias + the column-pinned construction trio + the S5 carriers)
         .target(
             name: "Set Ordered Primitive",
             dependencies: [
@@ -121,9 +109,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Umbrella ([MOD-005]: re-exports the in-package type target ONLY —
-        // zero cross-package re-exports; carries the column-generic ordered-read
-        // surface + the column-pinned membership/ordered ops)
         .target(
             name: "Set Ordered Primitives",
             dependencies: [
@@ -160,7 +145,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Tests
         .testTarget(
             name: "Set Ordered Primitives Tests",
             dependencies: [

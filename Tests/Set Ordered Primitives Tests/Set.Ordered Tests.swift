@@ -18,17 +18,11 @@ import Storage_Primitive
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
 
-// The column-keyed ordered-set suite: the ordered hashed column direct +
-// Shared-wrapped, exercising the ORDER-FACING surface (positional reads, position
-// lookup, order preservation) over the membership discipline.
-
 private typealias HeapStorage<E: ~Copyable> =
     Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
 
 private typealias OrderedColumn<E: Hash.Key & ~Copyable> =
     Hash.Indexed<Buffer<HeapStorage<E>>.Linear>
-
-// MARK: - [DS-024] + coherence (the Shared composite is this family's column)
 
 @Suite
 struct `Set.Ordered Column Law Tests` {
@@ -81,8 +75,6 @@ extension Hash.Indexed<Buffer<HeapStorage<Int>>.Linear> {
         Hash.Coherence.violations(self)
     }
 }
-
-// MARK: - Core membership (both columns)
 
 @Suite(.serialized)
 struct `Set.Ordered Core Tests` {
@@ -146,8 +138,6 @@ struct `Set.Ordered Core Tests` {
         #expect(has7)
     }
 }
-
-// MARK: - The ORDER-FACING surface (positional reads + position lookup)
 
 @Suite(.serialized)
 struct `Set.Ordered Order Tests` {
@@ -255,8 +245,6 @@ struct `Set.Ordered Order Tests` {
     }
 }
 
-// MARK: - CoW value semantics (the Shared composite column)
-
 @Suite(.serialized)
 struct `Set.Ordered CoW Tests` {
     @Suite struct Unit {}
@@ -267,8 +255,8 @@ struct `Set.Ordered CoW Tests` {
     func `copies share until mutation; inserts detach through the box`() {
         var a = __Set<Ownership.Shared<Int, OrderedColumn<Int>>>.Ordered(minimumCapacity: 4)
         a.insert(1)
-        let b = a  // S5: Set.Ordered is Copyable because S is
-        a.insert(2)  // withUnique(consuming:) detaches first
+        let b = a
+        a.insert(2)
         let mine = a.count
         let theirs = b.count
         #expect(mine == Index<Int>.Count(2))
@@ -331,14 +319,12 @@ struct `Set.Ordered CoW Tests` {
         c.insert(2)
         c.insert(1)
         #expect(a == b)
-        #expect(a != c)  // same members, different insertion order
+        #expect(a != c)
         let ha = a.hashValue
         let hb = b.hashValue
         #expect(ha == hb)
     }
 }
-
-// MARK: - Move-only members: positional surface + teardown oracles
 
 @Suite(.serialized)
 struct `Set.Ordered Teardown Tests` {
@@ -364,7 +350,7 @@ struct `Set.Ordered Teardown Tests` {
         }
         let all = OrderedProbe.destroyedSorted
         let twos = all.filter { $0 == 2 }.count
-        #expect(twos == 2)  // the live member + the contains() probe argument
+        #expect(twos == 2)
     }
 
     @Test
@@ -382,7 +368,7 @@ struct `Set.Ordered Teardown Tests` {
             #expect(pos == 1)
         }
         let sevens = OrderedProbe.destroyedSorted.filter { $0 == 7 }.count
-        #expect(sevens == 1)  // the borrowing reads minted no copies
+        #expect(sevens == 1)
     }
 
     @Test
@@ -421,9 +407,7 @@ extension OrderedItem: Hash.`Protocol` {
 private enum OrderedProbe {}
 
 extension OrderedProbe {
-    // SAFETY: allocated once at first access, mutated only through `reset()` /
-    // `recordDestroy(_:)` on the single-threaded test-runner path — this is a
-    // test-fixture deinit tally, never touched concurrently.
+
     nonisolated(unsafe) static var _destroyed: [Int] = []
     static func reset() { unsafe _destroyed = [] }
     static func recordDestroy(_ id: Int) { unsafe _destroyed.append(id) }
@@ -449,16 +433,12 @@ extension OrderedItem2: Hash.`Protocol` {
 private enum OrderedProbe2 {}
 
 extension OrderedProbe2 {
-    // SAFETY: allocated once at first access, mutated only through `reset()` /
-    // `recordDestroy(_:)` on the single-threaded test-runner path — this is a
-    // test-fixture deinit tally, never touched concurrently.
+
     nonisolated(unsafe) static var _destroyed: [Int] = []
     static func reset() { unsafe _destroyed = [] }
     static func recordDestroy(_ id: Int) { unsafe _destroyed.append(id) }
     static var destroyedSorted: [Int] { unsafe _destroyed.sorted() }
 }
-
-// MARK: - Sendable smoke
 
 @Suite
 struct `Set.Ordered Sendable Tests` {

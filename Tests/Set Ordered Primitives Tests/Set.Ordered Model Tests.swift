@@ -15,28 +15,18 @@ import Storage_Primitive
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
 
-// The W3 ordered-set model suite (arc-2): the set streams PLUS the order-facing
-// door — `index(of:)` is audited against the model position for every live
-// member, every op, and order is re-proven after every removal (backward-shift,
-// not tombstones: the GOAL's order-preservation oracle). Both columns; the
-// Shared lane is the sibling fleet with refcounted censused members
-// (end-of-scope multiset exactness). Shape constraint: B10.
-
 private typealias HeapStorage<E: ~Copyable> =
     Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
 
 private typealias OrderedColumn<E: Hash.Key & ~Copyable> =
     Hash.Indexed<Buffer<HeapStorage<E>>.Linear>
 
-// MARK: - Fixtures (the hoisted move-only element + the refcounted fleet member)
-
 extension Model.Element.Tracked: @retroactive Hash.`Protocol` {
-    /// Hashes the group (the model's collision axis) into the given hasher.
+
     public borrowing func hash(into hasher: inout Hasher) {
         hasher.combine(group)
     }
 
-    /// Returns whether two tracked elements share the same id.
     public static func == (
         lhs: borrowing Model.Element.Tracked,
         rhs: borrowing Model.Element.Tracked
@@ -73,8 +63,6 @@ extension Member: Hash.`Protocol` {
     }
 }
 
-// MARK: - The reference model: insertion-ordered membership
-
 private struct Reference {
     var members: [(id: Int, group: Int)] = []
     var ids: Swift.Set<Int> = []
@@ -106,8 +94,6 @@ extension Reference {
         }
     }
 }
-
-// MARK: - The direct move-only stream (order + position doors)
 
 private struct DirectStream: ~Copyable {
     var set: Set<Model.Element.Tracked>.Ordered
@@ -232,8 +218,6 @@ extension DirectStream {
         model.removeAll()
     }
 
-    /// Order + the position door, every op: every member's `index(of:)` equals
-    /// its model position (order preservation after every backward-shift removal).
     func audit() -> [String] {
         var findings: [String] = []
         if set.count != Index<Model.Element.Tracked>.Count(UInt(model.members.count)) {
@@ -299,7 +283,7 @@ private func runDirectStream(seed: UInt64) -> Model.Verdict {
     let census = Model.Census()
     var stream = DirectStream(seed: seed, census: census)
     stream.run()
-    var verdict = stream.finish()  // the set dies here
+    var verdict = stream.finish()
 
     if !census.isExact {
         verdict.findings.append(
@@ -308,8 +292,6 @@ private func runDirectStream(seed: UInt64) -> Model.Verdict {
     }
     return verdict
 }
-
-// MARK: - The Shared (CoW) sibling fleet
 
 private struct FleetStream {
     var siblings: [__Set<Ownership.Shared<Member, OrderedColumn<Member>>>.Ordered]
@@ -485,7 +467,7 @@ private func runFleetStream(seed: UInt64) -> Model.Verdict {
         var stream = FleetStream(seed: seed, census: census)
         stream.run()
         verdict = stream.verdict
-    }  // every sibling dies here; refcounts fall to zero
+    }
 
     if !census.isExact {
         verdict.findings.append(
@@ -494,8 +476,6 @@ private func runFleetStream(seed: UInt64) -> Model.Verdict {
     }
     return verdict
 }
-
-// MARK: - The suites
 
 @Suite
 struct `Set.Ordered Model` {
@@ -531,7 +511,7 @@ extension `Set.Ordered Model`.Unit {
             set.insert(Model.Element.Tracked(id: id, group: id / 2, census: census))
         }
         _ = set.remove(Model.Element.Tracked(id: 2, group: 1, census: census))
-        // Members after the removal point shift down by exactly one.
+
         let expectations: [(id: Int, group: Int, position: UInt)] = [
             (0, 0, 0), (1, 0, 1), (3, 1, 2), (4, 2, 3), (5, 2, 4),
         ]

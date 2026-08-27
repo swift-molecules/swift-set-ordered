@@ -1,7 +1,7 @@
 # .github/metadata.yaml
 description: "Set.Ordered — an insertion-ordered hash set generic over its storage column; preserves insertion order with O(1) average-case membership."
 topics:
-  - primitives
+  - molecules
   - set
 homepage: "https://swift-institute.org"
 readme:

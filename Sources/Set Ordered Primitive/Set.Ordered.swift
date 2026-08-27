@@ -1,13 +1,13 @@
 public import Buffer_Linear_Primitive
 public import Buffer_Primitive
 public import Hash_Indexed_Primitive
-import Hash_Primitives
-public import Index_Primitives
+import Hash
+public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitives
+public import Memory_Heap
 public import Ownership_Shared_Primitive
 public import Set_Primitive
-public import Storage_Contiguous_Primitives
+public import Storage_Contiguous
 public import Storage_Primitive
 
 extension __Set where S: ~Copyable {
@@ -43,14 +43,14 @@ extension __SetOrdered: Sendable where S: Sendable & ~Copyable {}
 extension __SetOrdered where S: ~Copyable {
 
     @inlinable
-    public init<E: Hash.Key & ~Copyable>(minimumCapacity: Index_Primitives.Index<E>.Count = .zero)
+    public init<E: Hash.Key & ~Copyable>(minimumCapacity: Index.Index<E>.Count = .zero)
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
         self.init(store: S(minimumCapacity: minimumCapacity))
     }
 
     @inlinable
     public init<E: Hash.Key & SendableMetatype>(
-        minimumCapacity: Index_Primitives.Index<E>.Count = .zero
+        minimumCapacity: Index.Index<E>.Count = .zero
     )
     where
         S == Ownership.Shared<
@@ -68,7 +68,7 @@ extension __SetOrdered where S: ~Copyable {
 
     @inlinable
     public init<E: Hash.Key & SendableMetatype & ~Copyable>(
-        minimumCapacity: Index_Primitives.Index<E>.Count = .zero
+        minimumCapacity: Index.Index<E>.Count = .zero
     )
     where
         S == Ownership.Shared<

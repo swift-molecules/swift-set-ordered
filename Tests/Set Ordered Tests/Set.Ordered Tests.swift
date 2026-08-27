@@ -1,21 +1,21 @@
 import Buffer_Linear_Primitive
 import Buffer_Primitive
-import Buffer_Primitives_Test_Support
+import Buffer_Test_Support
 import Hash_Indexed_Primitive
-import Hash_Primitives
-import Hash_Primitives_Standard_Library_Integration
+import Hash
+import Hash_Standard_Library_Integration
 import Hash_Table_Primitive
-import Hash_Table_Primitives_Test_Support
-import Index_Primitives
+import Hash_Table_Test_Support
+import Index
 import Memory_Allocator_Primitive
-import Memory_Heap_Primitives
-import Ordinal_Primitives_Standard_Library_Integration
+import Memory_Heap
+import Ordinal_Standard_Library_Integration
 import Ownership_Shared_Primitive
-import Set_Ordered_Primitives
+import Set_Ordered
 import Set_Primitive
-import Storage_Contiguous_Primitives
+import Storage_Contiguous
 import Storage_Primitive
-import Tagged_Primitives_Standard_Library_Integration
+import Tagged_Standard_Library_Integration
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =

@@ -1,8 +1,8 @@
-public import Buffer_Protocol_Primitives
-public import Index_Primitives
-import Ordinal_Primitives_Standard_Library_Integration
+public import Buffer_Protocol
+public import Index
+import Ordinal_Standard_Library_Integration
 public import Set_Ordered_Primitive
-public import Store_Protocol_Primitives
+public import Store_Protocol
 
 extension __SetOrdered where S: ~Copyable, S: Store.`Protocol` & Buffer.`Protocol` {
 

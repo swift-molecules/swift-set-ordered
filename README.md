@@ -1,7 +1,7 @@
-# Set Ordered Primitives
+# Set Ordered
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-primitives/swift-set-ordered-primitives/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-primitives/swift-set-ordered-primitives/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-molecules/swift-set-ordered/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-molecules/swift-set-ordered/actions/workflows/ci.yml)
 
 `Set<S>.Ordered` — the order-preserving set discipline over an ordered-hashed storage **column**. Like `Set<S>` it is an insertion-ordered hash set with O(1) average-case membership, but it additionally exposes **positional access**: every member has a stable index into the insertion order, so you can ask for a member's position with `index(of:)` and read by position with `set[index]`. As with the rest of the family, copyability flows from the column — move-only by default, copy-on-write via a `Shared` column.
 
@@ -19,11 +19,11 @@
 ## Quick Start
 
 ```swift
-import Set_Ordered_Primitives
+import Set_Ordered
 import Set_Primitive
-import Column_Primitives
+import Column
 import Hash_Indexed_Primitive
-import Hash_Primitives_Standard_Library_Integration
+import Hash_Standard_Library_Integration
 
 // Move-only by default, over the ordered-hashed column:
 var plugins = Set<Hash.Indexed<Column.Heap<String>>>.Ordered()
@@ -44,7 +44,7 @@ if let i = plugins.index(of: "logging") {
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-set-ordered-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-set-ordered.git", branch: "main")
 ]
 ```
 
@@ -52,7 +52,7 @@ dependencies: [
 .target(
     name: "App",
     dependencies: [
-        .product(name: "Set Ordered Primitives", package: "swift-set-ordered-primitives")
+        .product(name: "Set Ordered", package: "swift-set-ordered")
     ]
 )
 ```
@@ -65,7 +65,7 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 | Product | Contents | When to import |
 |---------|----------|----------------|
-| `Set Ordered Primitives` | Umbrella — `Set.Ordered` and its conformances | Most consumers |
+| `Set Ordered` | Umbrella — `Set.Ordered` and its conformances | Most consumers |
 | `Set Ordered Primitive` | The `Set.Ordered` value type, without the conformances | Move-only / minimal-surface use |
 
 ---
@@ -84,10 +84,10 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 ## Related Packages
 
-- [`swift-set-primitives`](https://github.com/swift-primitives/swift-set-primitives) — the `Set` namespace, the membership contract, and the base `Set<S>` this discipline extends.
-- [`swift-set-algebra-primitives`](https://github.com/swift-primitives/swift-set-algebra-primitives) — relational and constructive algebra (`isSubset`, `union`, `intersection`, …) over any `Set.Protocol` conformer.
-- [`swift-hash-table-primitives`](https://github.com/swift-primitives/swift-hash-table-primitives) — the `Hash.Indexed` position-index engine the column is built on.
-- [`swift-column-primitives`](https://github.com/swift-primitives/swift-column-primitives) — the column vocabulary (`Hash.Indexed`, `Column.Heap`, …) the set composes.
+- [`swift-set`](https://github.com/swift-molecules/swift-set) — the `Set` namespace, the membership contract, and the base `Set<S>` this discipline extends.
+- [`swift-set-algebra`](https://github.com/swift-molecules/swift-set-algebra) — relational and constructive algebra (`isSubset`, `union`, `intersection`, …) over any `Set.Protocol` conformer.
+- [`swift-hash-table`](https://github.com/swift-molecules/swift-hash-table) — the `Hash.Indexed` position-index engine the column is built on.
+- [`swift-column`](https://github.com/swift-molecules/swift-column) — the column vocabulary (`Hash.Indexed`, `Column.Heap`, …) the set composes.
 
 ---
 

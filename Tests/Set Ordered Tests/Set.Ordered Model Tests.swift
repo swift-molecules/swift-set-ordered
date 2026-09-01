@@ -1,5 +1,5 @@
 import Buffer_Linear_Primitive
-import Buffer_Primitive
+import Buffer
 public import Buffer_Test_Support
 import Hash
 import Hash_Table_Test_Support
@@ -11,7 +11,7 @@ import Ownership_Shared_Primitive
 import Set_Ordered
 import Set_Primitive
 import Storage_Contiguous
-import Storage_Primitive
+import Storage
 import Tagged_Standard_Library_Integration
 import Testing
 

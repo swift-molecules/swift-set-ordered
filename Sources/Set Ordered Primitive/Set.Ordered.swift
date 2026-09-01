@@ -1,5 +1,5 @@
 public import Buffer_Linear_Primitive
-public import Buffer_Primitive
+public import Buffer
 public import Hash_Indexed_Primitive
 import Hash
 public import Index
@@ -8,7 +8,7 @@ public import Memory
 public import Ownership_Shared_Primitive
 public import Set_Primitive
 public import Storage_Contiguous
-public import Storage_Primitive
+public import Storage
 
 extension __Set where S: ~Copyable {
 

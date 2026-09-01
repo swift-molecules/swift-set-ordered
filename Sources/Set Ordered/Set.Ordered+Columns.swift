@@ -5,7 +5,7 @@ import Hash
 import Hash_Table_Primitive
 public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap
+public import Memory
 public import Ownership_Shared_Primitive
 public import Set_Ordered_Primitive
 public import Storage_Contiguous

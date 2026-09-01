@@ -4,7 +4,7 @@ public import Hash_Indexed_Primitive
 import Hash
 import Hash_Table_Primitive
 public import Index
-public import Memory_Allocator_Primitive
+public import Memory_Allocator
 public import Memory
 public import Ownership_Shared_Primitive
 public import Set_Ordered_Primitive

@@ -102,7 +102,7 @@ let package = Package(
                 .product(name: "Store Protocol", package: "swift-storage"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
-                    name: "Memory Allocator Primitive",
+                    name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Index", package: "swift-index"),
@@ -134,7 +134,7 @@ let package = Package(
                 .product(name: "Store Protocol", package: "swift-storage"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
-                    name: "Memory Allocator Primitive",
+                    name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Index", package: "swift-index"),

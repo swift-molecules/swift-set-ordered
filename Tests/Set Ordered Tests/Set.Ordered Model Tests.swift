@@ -4,7 +4,7 @@ public import Buffer_Test_Support
 import Hash
 import Hash_Table_Test_Support
 import Index
-import Memory_Allocator_Primitive
+import Memory_Allocator
 import Memory
 import Ordinal_Standard_Library_Integration
 import Ownership_Shared_Primitive

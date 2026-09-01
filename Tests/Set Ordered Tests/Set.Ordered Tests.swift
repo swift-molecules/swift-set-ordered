@@ -13,7 +13,7 @@ import Ordinal_Standard_Library_Integration
 import Ownership_Shared_Primitive
 import Set_Ordered
 import Set_Primitive
-import Storage_Contiguous
+import Storage
 import Storage
 import Tagged_Standard_Library_Integration
 import Testing

@@ -8,7 +8,7 @@ public import Memory_Allocator
 public import Memory
 public import Ownership_Shared_Primitive
 public import Set_Ordered_Primitive
-public import Storage_Contiguous
+public import Storage
 public import Storage
 
 extension __SetOrdered where S: ~Copyable {

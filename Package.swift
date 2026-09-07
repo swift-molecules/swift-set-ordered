@@ -93,13 +93,12 @@ let package = Package(
                     package: "swift-ownership-shared"
                 ),
                 .product(name: "Buffer", package: "swift-buffer"),
-                .product(name: "Buffer Protocol", package: "swift-buffer"),
                 .product(
                     name: "Buffer Linear Primitive",
                     package: "swift-buffer-linear"
                 ),
                 .product(name: "Storage", package: "swift-storage"),
-                .product(name: "Store Protocol", package: "swift-store"),
+                .product(name: "Store", package: "swift-store"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
                     name: "Memory Allocator",
@@ -121,13 +120,12 @@ let package = Package(
                     package: "swift-ownership-shared"
                 ),
                 .product(name: "Buffer", package: "swift-buffer"),
-                .product(name: "Buffer Protocol", package: "swift-buffer"),
                 .product(
                     name: "Buffer Linear Primitive",
                     package: "swift-buffer-linear"
                 ),
                 .product(name: "Storage", package: "swift-storage"),
-                .product(name: "Store Protocol", package: "swift-store"),
+                .product(name: "Store", package: "swift-store"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
                     name: "Memory Allocator",

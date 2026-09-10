@@ -6,12 +6,12 @@ import Hash_Table_Test_Support
 import Index
 import Memory_Allocator
 import Memory
-import Ordinal_Standard_Library_Integration
+import Ordinal
 import Ownership_Shared_Primitive
 import Set_Ordered
 import Set_Primitive
 import Storage
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 private typealias HeapStorage<E: ~Copyable> =

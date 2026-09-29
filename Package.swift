@@ -106,6 +106,7 @@ let package = Package(
         .target(
             name: "Set Ordered",
             dependencies: [
+                .product(name: "Memory Allocator Protocol", package: "swift-memory-allocation"),
                 "Set Ordered Primitive",
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash Table Primitive", package: "swift-hash-table"),

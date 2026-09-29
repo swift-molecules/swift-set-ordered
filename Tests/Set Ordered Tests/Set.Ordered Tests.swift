@@ -2,8 +2,6 @@ import Buffer_Linear_Primitive
 import Buffer
 import Buffer_Test_Support
 import Hash_Indexed_Primitive
-import Hash
-import Hash
 import Hash_Table_Primitive
 import Hash_Table_Test_Support
 import Index
@@ -20,7 +18,7 @@ import Testing
 private typealias HeapStorage<E: ~Copyable> =
     Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
 
-private typealias OrderedColumn<E: Hash.Key & ~Copyable> =
+private typealias OrderedColumn<E: Swift.Hashable & ~Copyable> =
     Hash.Indexed<Buffer<HeapStorage<E>>.Linear>
 
 @Suite
@@ -393,7 +391,7 @@ private struct OrderedItem: ~Copyable {
     deinit { OrderedProbe.recordDestroy(id) }
 }
 
-extension OrderedItem: Hash.`Protocol` {
+extension OrderedItem: Swift.Hashable {
     borrowing func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -419,7 +417,7 @@ private struct OrderedItem2: ~Copyable {
     deinit { OrderedProbe2.recordDestroy(id) }
 }
 
-extension OrderedItem2: Hash.`Protocol` {
+extension OrderedItem2: Swift.Hashable {
     borrowing func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

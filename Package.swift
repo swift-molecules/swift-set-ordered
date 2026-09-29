@@ -38,10 +38,6 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-hash.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-molecules/swift-hash-table.git",
             branch: "main"
         ),
@@ -59,8 +55,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-storage.git",
-            branch: "main"
-        ),
+            branch: "main", traits: ["Memory"]),
         .package(
             url: "https://github.com/swift-atoms/swift-memory.git",
             branch: "main"
@@ -84,10 +79,10 @@ let package = Package(
         .target(
             name: "Set Ordered Primitive",
             dependencies: [
+                .product(name: "Memory Allocator Protocol", package: "swift-memory-allocation"),
                 .product(name: "Set Primitive", package: "swift-set"),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash Table Primitive", package: "swift-hash-table"),
-                .product(name: "Hash", package: "swift-hash"),
                 .product(
                     name: "Ownership Shared Primitive",
                     package: "swift-ownership-shared"
@@ -114,7 +109,6 @@ let package = Package(
                 "Set Ordered Primitive",
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash Table Primitive", package: "swift-hash-table"),
-                .product(name: "Hash", package: "swift-hash"),
                 .product(
                     name: "Ownership Shared Primitive",
                     package: "swift-ownership-shared"
@@ -150,10 +144,6 @@ let package = Package(
                 .product(
                     name: "Buffer Test Support",
                     package: "swift-buffer"
-                ),
-                .product(
-                    name: "Hash",
-                    package: "swift-hash"
                 ),
                 .product(
                     name: "Tagged",

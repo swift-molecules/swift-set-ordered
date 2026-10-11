@@ -2,7 +2,7 @@ public import Buffer_Linear_Primitive
 public import Buffer
 public import Hash_Indexed_Primitive
 public import Hash_Table_Primitive
-public import Index
+import Index
 public import Memory_Allocator
 public import Memory
 public import Ownership_Shared_Primitive
@@ -45,13 +45,13 @@ extension __SetOrdered: Sendable where S: Sendable & ~Copyable {}
 extension __SetOrdered where S: ~Copyable {
 
     @inlinable
-    public init<E: Swift.Hashable & ~Copyable>(minimumCapacity: Tagged<E, Cardinal> = .zero)
+    public init<E: Swift::Hashable & ~Copyable>(minimumCapacity: Tagged<E, Cardinal> = .zero)
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear> {
         self.init(store: S(minimumCapacity: minimumCapacity))
     }
 
     @inlinable
-    public init<E: Swift.Hashable & SendableMetatype>(
+    public init<E: Swift::Hashable & SendableMetatype>(
         minimumCapacity: Tagged<E, Cardinal> = .zero
     )
     where
@@ -69,7 +69,7 @@ extension __SetOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public init<E: Swift.Hashable & SendableMetatype & ~Copyable>(
+    public init<E: Swift::Hashable & SendableMetatype & ~Copyable>(
         minimumCapacity: Tagged<E, Cardinal> = .zero
     )
     where

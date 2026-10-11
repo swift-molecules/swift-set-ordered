@@ -107,7 +107,7 @@ let package = Package(
             name: "Set Ordered",
             dependencies: [
                 .product(name: "Memory Allocator Protocol", package: "swift-memory-allocation"),
-                "Set Ordered Primitive",
+                .target(name: "Set Ordered Primitive"),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash Table Primitive", package: "swift-hash-table"),
                 .product(
@@ -137,7 +137,7 @@ let package = Package(
         .testTarget(
             name: "Set Ordered Tests",
             dependencies: [
-                "Set Ordered",
+                .target(name: "Set Ordered"),
                 .product(
                     name: "Hash Table Test Support",
                     package: "swift-hash-table"
@@ -161,17 +161,14 @@ let package = Package(
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    let ecosystem: [SwiftSetting] = [
+    target.swiftSettings = (target.swiftSettings ?? []) + [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableExperimentalFeature("Lifetimes"),
         .enableUpcomingFeature("InferIsolatedConformances"),
+        .enableExperimentalFeature("Lifetimes"),
+        .treatAllWarnings(as: .error),
     ]
-
-    let package: [SwiftSetting] = []
-
-    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

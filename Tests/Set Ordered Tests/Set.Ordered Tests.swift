@@ -18,7 +18,7 @@ import Testing
 private typealias HeapStorage<E: ~Copyable> =
     Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>
 
-private typealias OrderedColumn<E: Swift.Hashable & ~Copyable> =
+private typealias OrderedColumn<E: Swift::Hashable & ~Copyable> =
     Hash.Indexed<Buffer<HeapStorage<E>>.Linear>
 
 @Suite
@@ -391,7 +391,7 @@ private struct OrderedItem: ~Copyable {
     deinit { OrderedProbe.recordDestroy(id) }
 }
 
-extension OrderedItem: Swift.Hashable {
+extension OrderedItem: Swift::Hashable {
     borrowing func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -417,7 +417,7 @@ private struct OrderedItem2: ~Copyable {
     deinit { OrderedProbe2.recordDestroy(id) }
 }
 
-extension OrderedItem2: Swift.Hashable {
+extension OrderedItem2: Swift::Hashable {
     borrowing func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

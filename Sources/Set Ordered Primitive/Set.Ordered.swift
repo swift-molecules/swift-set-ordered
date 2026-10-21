@@ -1,16 +1,16 @@
-public import Buffer_Linear_Primitive
 public import Buffer
+public import Buffer_Linear_Primitive
+public import Cardinal
 public import Hash_Indexed_Primitive
 public import Hash_Table_Primitive
 import Index
-public import Memory_Allocator
 public import Memory
+public import Memory_Allocator
+public import Memory_Allocator_Protocol
 public import Ownership_Shared_Primitive
 public import Set_Primitive
 public import Storage
-public import Cardinal
 public import Tagged
-public import Memory_Allocator_Protocol
 
 extension __Set where S: ~Copyable {
 

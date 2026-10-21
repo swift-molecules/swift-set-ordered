@@ -1,10 +1,10 @@
-import Buffer_Linear_Primitive
 import Buffer
+import Buffer_Linear_Primitive
 public import Buffer_Test_Support
 import Hash_Table_Test_Support
 import Index
-import Memory_Allocator
 import Memory
+import Memory_Allocator
 import Ordinal
 import Ownership_Shared_Primitive
 import Set_Ordered

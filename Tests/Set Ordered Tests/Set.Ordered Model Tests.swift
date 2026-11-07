@@ -475,14 +475,18 @@ private func runFleetStream(seed: UInt64) -> Model.Verdict {
     return verdict
 }
 
-@Suite
-struct `Set.Ordered Model` {
-    @Suite struct Unit {}
-    @Suite struct `Edge Case` {}
-    @Suite struct Integration {}
+enum `Set.Ordered Model Tests` {}
+
+extension `Set.Ordered Model Tests` {
+    @Suite
+    struct `Set.Ordered Model` {
+        @Suite struct Unit {}
+        @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
+    }
 }
 
-extension `Set.Ordered Model`.Integration {
+extension `Set.Ordered Model Tests`.`Set.Ordered Model`.Integration {
     @Test(arguments: Model.seeds(default: [0x02DE_2ED1, 0x02DE_2ED2]))
     func `direct move-only stream: order, positions, and exact teardown`(seed: UInt64) {
         let verdict = runDirectStream(seed: seed)
@@ -498,7 +502,7 @@ extension `Set.Ordered Model`.Integration {
     }
 }
 
-extension `Set.Ordered Model`.Unit {
+extension `Set.Ordered Model Tests`.`Set.Ordered Model`.Unit {
     @Test
     func `index(of:) tracks the backward-shift: positions compact after removal`() {
         let census = Model.Census()
@@ -524,7 +528,7 @@ extension `Set.Ordered Model`.Unit {
     }
 }
 
-extension `Set.Ordered Model`.`Edge Case` {
+extension `Set.Ordered Model Tests`.`Set.Ordered Model`.`Edge Case` {
     @Test
     func `a sibling's removal does not move the other sibling's positions`() {
         let census = Model.Census()
